@@ -129,6 +129,6 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(merchant[:name]).to eq(merchant_2.name)
-    expect(merchant[:name]).not_to eq(merchant_2.name)
+    expect(merchant[:name]).not_to eq(merchant_1.name)
   end
 end
