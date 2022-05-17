@@ -151,12 +151,12 @@ describe "Items API" do
       unit_price: 120000
     )
 
-    search_params = {search: "Fender"}
+    search_params = {name: "Fender Stratocaster"}
     headers = {"CONTENT_TYPE" => "application/json"}
 
     get "/api/v1/items/find", headers: headers, params: search_params
 
-    item = Json.parse(response.body, symbolize_names: true)
+    item = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_successful
     expect(item[:name]).to eq("Fender Stratocaster")
