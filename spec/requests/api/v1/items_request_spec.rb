@@ -76,7 +76,7 @@ describe "Items API" do
     }
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    post "/api/v1/merchants/#{merchant_1.id}/items", headers: headers, params: JSON.generate(item: item_params)
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
     created_item = Item.last
 
