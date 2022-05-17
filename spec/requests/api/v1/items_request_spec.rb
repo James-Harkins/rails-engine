@@ -127,11 +127,12 @@ describe "Items API" do
 
     get "/api/v1/items/#{item_1.id}/merchant"
 
-    merchant = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchant = response_body[:data]
 
     expect(response).to be_successful
-    expect(merchant[:name]).to eq(merchant_2.name)
-    expect(merchant[:name]).not_to eq(merchant_1.name)
+    expect(merchant[:attributes][:name]).to eq(merchant_2.name)
+    expect(merchant[:attributes][:name]).not_to eq(merchant_1.name)
   end
 
   it "can send data for one item based on search criteria" do
@@ -158,17 +159,18 @@ describe "Items API" do
 
     get "/api/v1/items/find", headers: headers, params: search_params
 
-    item = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
 
     expect(response).to be_successful
-    expect(item[:name]).to eq("Fender Stratocaster")
-    expect(item[:name]).not_to eq("Gibson Les Paul")
-    expect(item[:name]).not_to eq("Ibanez Prestige")
-    expect(item[:description]).to eq("Seafoam Green Finish")
-    expect(item[:description]).not_to eq("Sunburst Finish")
-    expect(item[:description]).not_to eq("Black Finish")
-    expect(item[:unit_price]).to eq(100000)
-    expect(item[:unit_price]).not_to eq(200000)
-    expect(item[:unit_price]).not_to eq(120000)
+    expect(item[:attributes][:name]).to eq("Fender Stratocaster")
+    expect(item[:attributes][:name]).not_to eq("Gibson Les Paul")
+    expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
+    expect(item[:attributes][:description]).to eq("Seafoam Green Finish")
+    expect(item[:attributes][:description]).not_to eq("Sunburst Finish")
+    expect(item[:attributes][:description]).not_to eq("Black Finish")
+    expect(item[:attributes][:unit_price]).to eq(100000)
+    expect(item[:attributes][:unit_price]).not_to eq(200000)
+    expect(item[:attributes][:unit_price]).not_to eq(120000)
   end
 end

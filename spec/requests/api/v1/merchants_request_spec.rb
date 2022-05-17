@@ -46,22 +46,23 @@ describe "Merchants API" do
 
     expect(response).to be_successful
 
-    items = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    items = response_body[:data]
 
     items.each do |item|
       expect(item).to have_key(:id)
 
-      expect(item).to have_key(:name)
-      expect(item[:name]).to be_an(String)
+      expect(item[:attributes]).to have_key(:name)
+      expect(item[:attributes][:name]).to be_an(String)
 
-      expect(item).to have_key(:description)
-      expect(item[:description]).to be_an(String)
+      expect(item[:attributes]).to have_key(:description)
+      expect(item[:attributes][:description]).to be_an(String)
 
-      expect(item).to have_key(:unit_price)
-      expect(item[:unit_price]).to be_an(Float)
+      expect(item[:attributes]).to have_key(:unit_price)
+      expect(item[:attributes][:unit_price]).to be_an(Float)
 
-      expect(item).to have_key(:merchant_id)
-      expect(item[:merchant_id]).to eq(merchant.id)
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).to eq(merchant.id)
     end
   end
 
@@ -77,12 +78,13 @@ describe "Merchants API" do
 
     get "/api/v1/merchants/find_all", headers: headers, params: search_params
 
-    merchants = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchants = response_body[:data]
 
     expect(merchants.count).to eq(3)
 
     merchants.each do |merchant|
-      expected_names = ((merchant[:name] == "Leo Fender") || (merchant[:name] == "Brian Fender") || (merchant[:name] == "Bill Fender"))
+      expected_names = ((merchant[:attributes][:name] == "Leo Fender") || (merchant[:attributes][:name] == "Brian Fender") || (merchant[:attributes][:name] == "Bill Fender"))
       expect(expected_names).to be true
     end
   end
