@@ -102,4 +102,17 @@ describe "Items API" do
     expect(item.name).to eq("Homer Simpson")
     expect(item.name).not_to eq(previous_name)
   end
+
+  it "can delete a given item" do
+    merchant_1 = create(:merchant)
+    id = create(:item, merchant_id: merchant_1.id).id
+
+    expect(Item.count).to eq(1)
+
+    delete "/api/v1/items/#{id}"
+
+    expect(response).to be_successful
+    expect(Item.count).to eq(0)
+    expect(Item.find(id)).to raise_error(ActiveRecord::RecordNotFound)
+  end
 end
