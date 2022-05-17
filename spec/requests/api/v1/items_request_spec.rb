@@ -131,4 +131,42 @@ describe "Items API" do
     expect(merchant[:name]).to eq(merchant_2.name)
     expect(merchant[:name]).not_to eq(merchant_1.name)
   end
+
+  it "can send data for one item based on search criteria" do
+    merchant_1 = create(:merchant)
+
+    item_1 = merchant_1.items.create!(
+      name: "Gibson Les Paul",
+      description: "Sunburst Finish",
+      unit_price: 200000
+    )
+    item_2 = merchant_1.items.create!(
+      name: "Fender Stratocaster",
+      description: "Seafoam Green Finish",
+      unit_price: 100000
+    )
+    item_3 = merchant_1.items.create!(
+      name: "Ibanez Prestige",
+      description: "Black Finish",
+      unit_price: 120000
+    )
+
+    search_params = {search: "Fender"}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/items/find", headers: headers, params: search_params
+
+    item = Json.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(item[:name]).to eq("Fender Stratocaster")
+    expect(item[:name]).not_to eq("Gibson Les Paul")
+    expect(item[:name]).not_to eq("Ibanez Prestige")
+    expect(item[:description]).to eq("Seafoam Green Finish")
+    expect(item[:description]).not_to eq("Sunburst Finish")
+    expect(item[:description]).not_to eq("Black Finish")
+    expect(item[:unit_price]).to eq(100000)
+    expect(item[:unit_price]).not_to eq(200000)
+    expect(item[:unit_price]).not_to eq(120000)
+  end
 end
