@@ -78,13 +78,14 @@ describe "Items API" do
 
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
-    created_item = Item.last
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
 
     expect(response).to be_successful
-    expect(created_item.name).to eq("1959 Gibson Les Paul")
-    expect(created_item.description).to eq("Sunburst Finish, Rosewood Fingerboard")
-    expect(created_item.unit_price).to eq(25000000)
-    expect(created_item.merchant_id).to eq(merchant_1.id)
+    expect(item[:attributes][:name]).to eq("1959 Gibson Les Paul")
+    expect(item[:attributes][:description]).to eq("Sunburst Finish, Rosewood Fingerboard")
+    expect(item[:attributes][:unit_price]).to eq(25000000)
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
   it "can update a given item" do
@@ -96,11 +97,12 @@ describe "Items API" do
 
     patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item: item_params)
 
-    item = Item.find(id)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
 
     expect(response).to be_successful
-    expect(item.name).to eq("Homer Simpson")
-    expect(item.name).not_to eq(previous_name)
+    expect(item[:attributes][:name]).to eq("Homer Simpson")
+    expect(item[:attributes][:name]).not_to eq(previous_name)
   end
 
   it "can delete a given item" do
