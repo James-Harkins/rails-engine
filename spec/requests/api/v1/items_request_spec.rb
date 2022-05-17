@@ -113,6 +113,6 @@ describe "Items API" do
 
     expect(response).to be_successful
     expect(Item.count).to eq(0)
-    expect(Item.find(id)).to raise_error(ActiveRecord::RecordNotFound)
+    expect { Item.find(id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 end
