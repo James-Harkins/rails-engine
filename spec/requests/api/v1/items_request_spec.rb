@@ -20,8 +20,6 @@ describe "Items API" do
     expect(items.count).to eq(18)
 
     items.each do |item|
-      expected_merchants = ((item[:attributes][:merchant_id] == merchant_1.id) || (item[:attributes][:merchant_id] == merchant_2.id) || (item[:attributes][:merchant_id] == merchant_3.id))
-
       expect(item).to have_key(:id)
 
       expect(item[:attributes]).to have_key(:name)
@@ -32,9 +30,6 @@ describe "Items API" do
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_an(Float)
-
-      expect(item[:attributes]).to have_key(:merchant_id)
-      expect(expected_merchants).to be true
     end
   end
 
@@ -60,9 +55,6 @@ describe "Items API" do
 
     expect(item[:attributes]).to have_key(:unit_price)
     expect(item[:attributes][:unit_price]).to be_an(Float)
-
-    expect(item[:attributes]).to have_key(:merchant_id)
-    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
   it "can create a new item" do
@@ -85,7 +77,6 @@ describe "Items API" do
     expect(item[:attributes][:name]).to eq("1959 Gibson Les Paul")
     expect(item[:attributes][:description]).to eq("Sunburst Finish, Rosewood Fingerboard")
     expect(item[:attributes][:unit_price]).to eq(25000000)
-    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
   it "can update a given item" do
