@@ -36,4 +36,12 @@ describe "Merchants API" do
     expect(merchant).to have_key(:name)
     expect(merchant[:name]).to be_an(String)
   end
+
+  it "can get all items for one merchant" do
+    merchant = create(:merchant)
+
+    create_list(:item, 5, merchant_id: merchant.id)
+
+    # binding.pry
+  end
 end
