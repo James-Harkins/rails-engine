@@ -65,4 +65,26 @@ describe "Merchants API" do
       expect(item[:merchant_id]).to eq(merchant.id)
     end
   end
+
+  it "can find all merchants matching some search criteria" do
+    merchant_1 = Merchant.create(name: "Leo Fender")
+    merchant_2 = Merchant.create(name: "Doug West")
+    merchant_3 = Merchant.create(name: "Brian Fender")
+    merchant_4 = Merchant.create(name: "Orville Gibson")
+    merchant_5 = Merchant.create(name: "Bill Fender")
+
+    search_params = {name: "Fender"}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/merchants/find_all", headers: headers, params: search_params
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(merchants.count).to eq(3)
+
+    merchants.each do |merchant|
+      expected_names = ((merchant[:name] == "Leo Fender") || (merchant[:name] == "Brian Fender") || (merchant[:name] == "Bill Fender"))
+      expect(expected_names).to be true
+    end
+  end
 end
