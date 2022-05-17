@@ -94,12 +94,12 @@ describe "Items API" do
     item_params = {name: "Homer Simpson"}
     headers = {"CONTENT_TYPE" => "application/json"}
 
-    patch "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item: item_params)
 
-    item = Item.find(id: id)
+    item = Item.find(id)
 
     expect(response).to be_successful
-    expect(created_item.name).to eq("Homer Simpson")
-    expect(created_item.name).not_to eq(previous_name)
+    expect(item.name).to eq("Homer Simpson")
+    expect(item.name).not_to eq(previous_name)
   end
 end
