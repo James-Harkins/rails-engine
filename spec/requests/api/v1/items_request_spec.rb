@@ -10,7 +10,7 @@ describe "Items API" do
     create_list(:item, 3, merchant_id: merchant_2.id)
     create_list(:item, 10, merchant_id: merchant_3.id)
 
-    get "/api/v1/merchants"
+    get "/api/v1/items"
 
     expect(response).to be_successful
 
@@ -18,9 +18,9 @@ describe "Items API" do
 
     expect(items.count).to eq(18)
 
-    expected_merchants = ((item[:merchant_id] = merchant_1.id) || (item[:merchant_id] = merchant_2.id) || (item[:merchant_id] = merchant_3.id))
-
     items.each do |item|
+      expected_merchants = ((item[:merchant_id] == merchant_1.id) || (item[:merchant_id] == merchant_2.id) || (item[:merchant_id] == merchant_3.id))
+
       expect(item).to have_key(:id)
       expect(item[:id]).to be_an(Integer)
 
@@ -34,7 +34,7 @@ describe "Items API" do
       expect(item[:unit_price]).to be_an(Float)
 
       expect(item).to have_key(:merchant_id)
-      expect(expected).to be true
+      expect(expected_merchants).to be true
     end
   end
 end
