@@ -115,4 +115,20 @@ describe "Items API" do
     expect(Item.count).to eq(0)
     expect { Item.find(id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
+
+  it "can send merchant data for a given Item id" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    item_1 = create(:item, merchant_id: merchant_2.id)
+    item_2 = create(:item, merchant_id: merchant_1.id)
+
+    get "/api/v1/items/#{item_1.id}/merchant"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_successful
+    expect(merchant[:name]).to eq(merchant_2.name)
+    expect(merchant[:name]).not_to eq(merchant_2.name)
+  end
 end
