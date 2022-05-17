@@ -83,8 +83,8 @@ describe "Merchants API" do
     expect(merchants.count).to eq(3)
 
     merchants.each do |merchant|
-      expected_names = ((merchant[:name] = "Leo Fender") || (merchant[:name] = "Brian Fender") || (merchant[:name] = "Bill Fender") ||)
-      expect(expected_merchants).to be true
+      expected_names = ((merchant[:name] == "Leo Fender") || (merchant[:name] == "Brian Fender") || (merchant[:name] == "Bill Fender"))
+      expect(expected_names).to be true
     end
   end
 end
