@@ -14,26 +14,26 @@ describe "Items API" do
 
     expect(response).to be_successful
 
-    items = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    items = response_body[:data]
 
     expect(items.count).to eq(18)
 
     items.each do |item|
-      expected_merchants = ((item[:merchant_id] == merchant_1.id) || (item[:merchant_id] == merchant_2.id) || (item[:merchant_id] == merchant_3.id))
+      expected_merchants = ((item[:attributes][:merchant_id] == merchant_1.id) || (item[:attributes][:merchant_id] == merchant_2.id) || (item[:attributes][:merchant_id] == merchant_3.id))
 
       expect(item).to have_key(:id)
-      expect(item[:id]).to be_an(Integer)
 
-      expect(item).to have_key(:name)
-      expect(item[:name]).to be_an(String)
+      expect(item[:attributes]).to have_key(:name)
+      expect(item[:attributes][:name]).to be_an(String)
 
-      expect(item).to have_key(:description)
-      expect(item[:description]).to be_an(String)
+      expect(item[:attributes]).to have_key(:description)
+      expect(item[:attributes][:description]).to be_an(String)
 
-      expect(item).to have_key(:unit_price)
-      expect(item[:unit_price]).to be_an(Float)
+      expect(item[:attributes]).to have_key(:unit_price)
+      expect(item[:attributes][:unit_price]).to be_an(Float)
 
-      expect(item).to have_key(:merchant_id)
+      expect(item[:attributes]).to have_key(:merchant_id)
       expect(expected_merchants).to be true
     end
   end
@@ -47,22 +47,22 @@ describe "Items API" do
 
     expect(response).to be_successful
 
-    item = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
 
     expect(item).to have_key(:id)
-    expect(item[:id]).to be_an(Integer)
 
-    expect(item).to have_key(:name)
-    expect(item[:name]).to be_an(String)
+    expect(item[:attributes]).to have_key(:name)
+    expect(item[:attributes][:name]).to be_an(String)
 
-    expect(item).to have_key(:description)
-    expect(item[:description]).to be_an(String)
+    expect(item[:attributes]).to have_key(:description)
+    expect(item[:attributes][:description]).to be_an(String)
 
-    expect(item).to have_key(:unit_price)
-    expect(item[:unit_price]).to be_an(Float)
+    expect(item[:attributes]).to have_key(:unit_price)
+    expect(item[:attributes][:unit_price]).to be_an(Float)
 
-    expect(item).to have_key(:merchant_id)
-    expect(item[:merchant_id]).to eq(merchant_1.id)
+    expect(item[:attributes]).to have_key(:merchant_id)
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
   it "can create a new item" do

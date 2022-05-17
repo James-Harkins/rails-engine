@@ -8,16 +8,16 @@ describe "Merchants API" do
 
     expect(response).to be_successful
 
-    merchants = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchants = response_body[:data]
 
     expect(merchants.count).to eq(5)
 
     merchants.each do |merchant|
       expect(merchant).to have_key(:id)
-      expect(merchant[:id]).to be_an(Integer)
 
-      expect(merchant).to have_key(:name)
-      expect(merchant[:name]).to be_an(String)
+      expect(merchant[:attributes]).to have_key(:name)
+      expect(merchant[:attributes][:name]).to be_an(String)
     end
   end
 
@@ -28,13 +28,13 @@ describe "Merchants API" do
 
     expect(response).to be_successful
 
-    merchant = JSON.parse(response.body, symbolize_names: true)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchant = response_body[:data]
 
     expect(merchant).to have_key(:id)
-    expect(merchant[:id]).to be_an(Integer)
 
-    expect(merchant).to have_key(:name)
-    expect(merchant[:name]).to be_an(String)
+    expect(merchant[:attributes]).to have_key(:name)
+    expect(merchant[:attributes][:name]).to be_an(String)
   end
 
   it "can get all items for one merchant" do
@@ -50,7 +50,6 @@ describe "Merchants API" do
 
     items.each do |item|
       expect(item).to have_key(:id)
-      expect(item[:id]).to be_an(Integer)
 
       expect(item).to have_key(:name)
       expect(item[:name]).to be_an(String)
