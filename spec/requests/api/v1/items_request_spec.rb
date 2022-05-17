@@ -23,7 +23,6 @@ describe "Items API" do
       expected_merchants = ((item[:attributes][:merchant_id] == merchant_1.id) || (item[:attributes][:merchant_id] == merchant_2.id) || (item[:attributes][:merchant_id] == merchant_3.id))
 
       expect(item).to have_key(:id)
-      expect(item[:id]).to be_an(Integer)
 
       expect(item[:attributes]).to have_key(:name)
       expect(item[:attributes][:name]).to be_an(String)
@@ -52,7 +51,6 @@ describe "Items API" do
     item = response_body[:data]
 
     expect(item).to have_key(:id)
-    expect(item[:id]).to be_an(Integer)
 
     expect(item[:attributes]).to have_key(:name)
     expect(item[:attributes][:name]).to be_an(String)
@@ -127,8 +125,7 @@ describe "Items API" do
 
     get "/api/v1/items/#{item_1.id}/merchant"
 
-    response_body = JSON.parse(response.body, symbolize_names: true)
-    merchant = response_body[:data]
+    merchant = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_successful
     expect(merchant[:name]).to eq(merchant_2.name)
@@ -159,18 +156,17 @@ describe "Items API" do
 
     get "/api/v1/items/find", headers: headers, params: search_params
 
-    response_body = JSON.parse(response.body, symbolize_names: true)
-    item = response_body[:data]
+    item = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_successful
-    expect(item[:attributes][:name]).to eq("Fender Stratocaster")
-    expect(item[:attributes][:name]).not_to eq("Gibson Les Paul")
-    expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
-    expect(item[:attributes][:description]).to eq("Seafoam Green Finish")
-    expect(item[:attributes][:description]).not_to eq("Sunburst Finish")
-    expect(item[:attributes][:description]).not_to eq("Black Finish")
-    expect(item[:attributes][:unit_price]).to eq(100000)
-    expect(item[:attributes][:unit_price]).not_to eq(200000)
-    expect(item[:attributes][:unit_price]).not_to eq(120000)
+    expect(item[:name]).to eq("Fender Stratocaster")
+    expect(item[:name]).not_to eq("Gibson Les Paul")
+    expect(item[:name]).not_to eq("Ibanez Prestige")
+    expect(item[:description]).to eq("Seafoam Green Finish")
+    expect(item[:description]).not_to eq("Sunburst Finish")
+    expect(item[:description]).not_to eq("Black Finish")
+    expect(item[:unit_price]).to eq(100000)
+    expect(item[:unit_price]).not_to eq(200000)
+    expect(item[:unit_price]).not_to eq(120000)
   end
 end
