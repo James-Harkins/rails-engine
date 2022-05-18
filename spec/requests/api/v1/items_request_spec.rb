@@ -36,6 +36,34 @@ describe "Items API" do
     end
   end
 
+  it "always returns an array of data, even if one resource is found" do
+    merchant = create(:merchant)
+
+    create(:item, merchant_id: merchant.id)
+
+    get "/api/v1/items"
+
+    expect(response).to be_successful
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    items = response_body[:data]
+
+    expect(items).to be_an Array
+    expect(items.count).to eq(1)
+  end
+
+  it "always returns an array of data, even if one resource is found" do
+    get "/api/v1/items"
+
+    expect(response).to be_successful
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    items = response_body[:data]
+
+    expect(items).to be_an Array
+    expect(items.count).to eq(0)
+  end
+
   it "can send one item by its id" do
     merchant_1 = create(:merchant)
 
