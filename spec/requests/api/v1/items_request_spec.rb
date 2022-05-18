@@ -115,6 +115,50 @@ describe "Items API" do
     expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
+  it "returns an error if any attribute is missing" do
+    merchant_1 = create(:merchant)
+
+    item_params = {
+      name: "1959 Gibson Les Paul",
+      description: "Sunburst Finish, Rosewood Fingerboard",
+      unit_price: 25000000,
+      merchant_id: merchant_1.id
+    }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to have_http_status(404)
+    expect(response.body).to match(/Incomplete or Invalid Data/)
+  end
+
+  it "ignores attributes sent by the user which are not allowed" do
+    merchant_1 = create(:merchant)
+
+    item_params = {
+      name: "1959 Gibson Les Paul",
+      description: "Sunburst Finish, Rosewood Fingerboard",
+      unit_price: 25000000,
+      merchant_id: merchant_1.id,
+      num_of_strings: 6,
+      num_of_frets: 22
+    }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+    expect(response).to be_successful
+    expect(item[:attributes][:name]).to eq("1959 Gibson Les Paul")
+    expect(item[:attributes][:description]).to eq("Sunburst Finish, Rosewood Fingerboard")
+    expect(item[:attributes][:unit_price]).to eq(25000000)
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
+    expect(item[:attributes]).not_to have_key(:num_of_strings)
+    expect(item[:attributes]).not_to have_key(:num_of_frets)
+  end
+
   it "can update a given item" do
     merchant_1 = create(:merchant)
     id = create(:item, merchant_id: merchant_1.id).id

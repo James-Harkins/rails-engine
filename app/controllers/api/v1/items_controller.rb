@@ -9,13 +9,11 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     item = Item.create(item_params)
-    item.post_or_patch = true
     render json: ItemSerializer.new(item)
   end
 
   def update
     item = Item.update(params[:id], item_params)
-    item.post_or_patch = true
     render json: ItemSerializer.new(item)
   end
 
