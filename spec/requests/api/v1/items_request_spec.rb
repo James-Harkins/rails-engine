@@ -21,6 +21,7 @@ describe "Items API" do
 
     items.each do |item|
       expect(item).to have_key(:id)
+      expect(item[:type]).to eq("item")
 
       expect(item[:attributes]).to have_key(:name)
       expect(item[:attributes][:name]).to be_an(String)
@@ -30,6 +31,8 @@ describe "Items API" do
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_an(Float)
+
+      expect(item[:attributes]).not_to have_key(:merchant_id)
     end
   end
 
