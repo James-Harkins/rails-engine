@@ -1,4 +1,6 @@
 class Api::V1::ItemsController < ApplicationController
+  extend ActiveSupport::Concern
+
   def index
     render json: ItemSerializer.new(Item.all)
   end
@@ -8,8 +10,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    item = Item.create(item_params)
-    render json: ItemSerializer.new(item)
+    item = Item.new(item_params)
+    if item.save
+      render json: ItemSerializer.new(item)
+    else
+      render json: item.errors
+    end
   end
 
   def update

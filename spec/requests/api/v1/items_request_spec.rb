@@ -127,8 +127,13 @@ describe "Items API" do
 
     post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
-    expect(response).to have_http_status(404)
-    expect(response.body).to match(/Incomplete or Invalid Data/)
+    response_body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response_body).to be_a Hash
+    expect(response_body[:errors]).to be_an Array
+    expect(response_body[:errors][0]).to be_a Hash
+    expect(response_body[:errors][0][:id]).to be_a Hash
+    expect(response_body[:errors][0][:description]).to eq(" Description cannot be empty")
   end
 
   it "ignores attributes sent by the user which are not allowed" do
