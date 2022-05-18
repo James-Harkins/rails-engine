@@ -76,6 +76,10 @@ describe "Items API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     item = response_body[:data]
 
+    binding.pry
+
+    expect(item).to be_a Hash
+
     expect(item).to have_key(:id)
 
     expect(item[:attributes]).to have_key(:name)

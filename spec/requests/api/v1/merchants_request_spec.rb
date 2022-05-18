@@ -59,6 +59,10 @@ describe "Merchants API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchant = response_body[:data]
 
+    binding.pry
+
+    expect(merchant).to be_a Hash
+
     expect(merchant).to have_key(:id)
 
     expect(merchant[:attributes]).to have_key(:name)
