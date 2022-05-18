@@ -14,9 +14,9 @@ describe Merchant, type: :model do
         merchant_4 = Merchant.create(name: "Orville Gibson")
         merchant_5 = Merchant.create(name: "Bill Fender")
 
-        expect(Merchant.find_all_by_name).to eq([merchant_5, merchant_3, merchant_1])
-        expect(Merchant.find_all_by_name.include?(merchant_2)).to eq false
-        expect(Merchant.find_all_by_name.include?(merchant_4)).to eq false
+        expect(Merchant.find_all_by_name("fender")).to eq([merchant_5, merchant_3, merchant_1])
+        expect(Merchant.find_all_by_name("fender").include?(merchant_2)).to eq false
+        expect(Merchant.find_all_by_name("fender").include?(merchant_4)).to eq false
       end
     end
   end
