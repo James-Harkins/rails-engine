@@ -32,7 +32,7 @@ describe "Items API" do
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_an(Float)
 
-      expect(item[:attributes]).not_to have_key(:merchant_id)
+      expect(item[:attributes]).to have_key(:merchant_id)
     end
   end
 
@@ -88,6 +88,8 @@ describe "Items API" do
 
     expect(item[:attributes]).to have_key(:unit_price)
     expect(item[:attributes][:unit_price]).to be_an(Float)
+
+    expect(item[:attributes]).to have_key(:merchant_id)
   end
 
   it "can create a new item" do
@@ -213,5 +215,7 @@ describe "Items API" do
     expect(item[:attributes][:unit_price]).not_to eq(200000)
     expect(item[:attributes][:unit_price]).not_to eq(120000)
     expect(item[:attributes][:unit_price]).not_to eq(130000)
+
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 end
