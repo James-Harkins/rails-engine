@@ -97,14 +97,14 @@ describe "Merchants API" do
     end
   end
 
-  it "can find all merchants matching some search criteria" do
+  it "can find all merchants matching some case-insensitive search criteria and returns them in alphabetical order by name" do
     Merchant.create(name: "Leo Fender")
     Merchant.create(name: "Doug West")
     Merchant.create(name: "Brian Fender")
     Merchant.create(name: "Orville Gibson")
     Merchant.create(name: "Bill Fender")
 
-    search_params = {name: "Fender"}
+    search_params = {name: "fender"}
     headers = {"CONTENT_TYPE" => "application/json"}
 
     get "/api/v1/merchants/find_all", headers: headers, params: search_params

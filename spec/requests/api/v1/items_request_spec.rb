@@ -161,26 +161,31 @@ describe "Items API" do
     expect(merchant[:attributes][:name]).not_to eq(merchant_1.name)
   end
 
-  it "can send data for one item based on search criteria" do
+  it "can send data for one item based on search criteria, which is case-insensitive and returns the first item alphabetically by name" do
     merchant_1 = create(:merchant)
 
-    item_1 = merchant_1.items.create!(
+    merchant_1.items.create!(
       name: "Gibson Les Paul",
       description: "Sunburst Finish",
       unit_price: 200000
     )
-    item_2 = merchant_1.items.create!(
+    merchant_1.items.create!(
+      name: "Fender Telecaster",
+      description: "Butterscotch Blonde Finish",
+      unit_price: 130000
+    )
+    merchant_1.items.create!(
       name: "Fender Stratocaster",
       description: "Seafoam Green Finish",
       unit_price: 100000
     )
-    item_3 = merchant_1.items.create!(
+    merchant_1.items.create!(
       name: "Ibanez Prestige",
       description: "Black Finish",
       unit_price: 120000
     )
 
-    search_params = {name: "Fender"}
+    search_params = {name: "fender"}
     headers = {"CONTENT_TYPE" => "application/json"}
 
     get "/api/v1/items/find", headers: headers, params: search_params
@@ -195,13 +200,16 @@ describe "Items API" do
     expect(item[:attributes][:name]).to eq("Fender Stratocaster")
     expect(item[:attributes][:name]).not_to eq("Gibson Les Paul")
     expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
+    expect(item[:attributes][:name]).not_to eq("Fender Telecaster")
 
     expect(item[:attributes][:description]).to eq("Seafoam Green Finish")
     expect(item[:attributes][:description]).not_to eq("Sunburst Finish")
     expect(item[:attributes][:description]).not_to eq("Black Finish")
+    expect(item[:attributes][:description]).not_to eq("Butterscotch Blonde Finish")
 
     expect(item[:attributes][:unit_price]).to eq(100000)
     expect(item[:attributes][:unit_price]).not_to eq(200000)
     expect(item[:attributes][:unit_price]).not_to eq(120000)
+    expect(item[:attributes][:unit_price]).not_to eq(130000)
   end
 end
