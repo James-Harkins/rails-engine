@@ -180,7 +180,7 @@ describe "Items API" do
       unit_price: 120000
     )
 
-    search_params = {name: "Fender Stratocaster"}
+    search_params = {name: "Fender"}
     headers = {"CONTENT_TYPE" => "application/json"}
 
     get "/api/v1/items/find", headers: headers, params: search_params
