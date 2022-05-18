@@ -132,8 +132,8 @@ describe "Items API" do
     expect(response_body).to be_a Hash
     expect(response_body[:errors]).to be_an Array
     expect(response_body[:errors][0]).to be_a Hash
-    expect(response_body[:errors][0][:id]).to be_a Hash
-    expect(response_body[:errors][0][:description]).to eq(" Description cannot be empty")
+    expect(response_body[:errors][0][:id]).to eq("description")
+    expect(response_body[:errors][0][:title]).to eq("Description can't be blank")
   end
 
   it "ignores attributes sent by the user which are not allowed" do

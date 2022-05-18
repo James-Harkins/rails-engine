@@ -1,5 +1,5 @@
 class Api::V1::ItemsController < ApplicationController
-  extend ActiveSupport::Concern
+  include ErrorSerializer
 
   def index
     render json: ItemSerializer.new(Item.all)
@@ -14,7 +14,7 @@ class Api::V1::ItemsController < ApplicationController
     if item.save
       render json: ItemSerializer.new(item)
     else
-      render json: item.errors
+      render json: ErrorSerializer.serialize(item.errors)
     end
   end
 
