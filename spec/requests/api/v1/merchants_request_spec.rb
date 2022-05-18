@@ -59,8 +59,6 @@ describe "Merchants API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchant = response_body[:data]
 
-    binding.pry
-
     expect(merchant).to be_a Hash
 
     expect(merchant).to have_key(:id)
@@ -81,6 +79,8 @@ describe "Merchants API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     items = response_body[:data]
 
+    expect(items).to be_an Array
+
     items.each do |item|
       expect(item).to have_key(:id)
 
@@ -92,6 +92,8 @@ describe "Merchants API" do
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_an(Float)
+
+      expect(item[:attributes]).not_to have_key(:merchant_id)
     end
   end
 
@@ -110,6 +112,7 @@ describe "Merchants API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchants = response_body[:data]
 
+    expect(merchants).to be_an Array
     expect(merchants.count).to eq(3)
 
     merchants.each do |merchant|

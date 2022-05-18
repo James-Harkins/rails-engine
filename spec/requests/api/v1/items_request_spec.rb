@@ -76,8 +76,6 @@ describe "Items API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     item = response_body[:data]
 
-    binding.pry
-
     expect(item).to be_a Hash
 
     expect(item).to have_key(:id)
@@ -156,6 +154,8 @@ describe "Items API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchant = response_body[:data]
 
+    expect(merchant).to be_a Hash
+
     expect(response).to be_successful
     expect(merchant[:attributes][:name]).to eq(merchant_2.name)
     expect(merchant[:attributes][:name]).not_to eq(merchant_1.name)
@@ -189,12 +189,17 @@ describe "Items API" do
     item = response_body[:data]
 
     expect(response).to be_successful
+
+    expect(item).to be_a Hash
+
     expect(item[:attributes][:name]).to eq("Fender Stratocaster")
     expect(item[:attributes][:name]).not_to eq("Gibson Les Paul")
     expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
+
     expect(item[:attributes][:description]).to eq("Seafoam Green Finish")
     expect(item[:attributes][:description]).not_to eq("Sunburst Finish")
     expect(item[:attributes][:description]).not_to eq("Black Finish")
+
     expect(item[:attributes][:unit_price]).to eq(100000)
     expect(item[:attributes][:unit_price]).not_to eq(200000)
     expect(item[:attributes][:unit_price]).not_to eq(120000)
