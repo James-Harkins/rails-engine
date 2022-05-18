@@ -110,6 +110,7 @@ describe "Items API" do
     expect(item[:attributes][:name]).to eq("1959 Gibson Les Paul")
     expect(item[:attributes][:description]).to eq("Sunburst Finish, Rosewood Fingerboard")
     expect(item[:attributes][:unit_price]).to eq(25000000)
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
   it "can update a given item" do
@@ -127,6 +128,7 @@ describe "Items API" do
     expect(response).to be_successful
     expect(item[:attributes][:name]).to eq("Homer Simpson")
     expect(item[:attributes][:name]).not_to eq(previous_name)
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
   it "can delete a given item" do
