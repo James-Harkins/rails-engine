@@ -120,7 +120,6 @@ describe "Items API" do
 
     item_params = {
       name: "1959 Gibson Les Paul",
-      description: "Sunburst Finish, Rosewood Fingerboard",
       unit_price: 25000000,
       merchant_id: merchant_1.id
     }

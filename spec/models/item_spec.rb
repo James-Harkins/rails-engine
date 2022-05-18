@@ -5,6 +5,12 @@ describe Item, type: :model do
     it { should belong_to :merchant }
   end
 
+  describe "validations" do
+    it { should validate_presence_of :name }
+    it { should validate_presence_of :description }
+    it { should validate_presence_of :unit_price }
+  end
+
   describe "class methods" do
     describe "#find_by_name" do
       it "should return the first item in case-sensitive alphabetical order with a name including the search param" do
