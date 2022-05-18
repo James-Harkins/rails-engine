@@ -98,11 +98,11 @@ describe "Merchants API" do
   end
 
   it "can find all merchants matching some search criteria" do
-    merchant_1 = Merchant.create(name: "Leo Fender")
-    merchant_2 = Merchant.create(name: "Doug West")
-    merchant_3 = Merchant.create(name: "Brian Fender")
-    merchant_4 = Merchant.create(name: "Orville Gibson")
-    merchant_5 = Merchant.create(name: "Bill Fender")
+    Merchant.create(name: "Leo Fender")
+    Merchant.create(name: "Doug West")
+    Merchant.create(name: "Brian Fender")
+    Merchant.create(name: "Orville Gibson")
+    Merchant.create(name: "Bill Fender")
 
     search_params = {name: "Fender"}
     headers = {"CONTENT_TYPE" => "application/json"}

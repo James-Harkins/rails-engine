@@ -7,7 +7,7 @@ describe Item, type: :model do
 
   describe "class methods" do
     describe "#find_by_name" do
-      it "should return the first item in case-sensitive alphabetical order with a name including the searhch param" do
+      it "should return the first item in case-sensitive alphabetical order with a name including the search param" do
         merchant_1 = create(:merchant)
 
         item_1 = merchant_1.items.create!(
