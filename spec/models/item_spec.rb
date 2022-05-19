@@ -97,7 +97,7 @@ describe Item, type: :model do
           unit_price: 120000
         )
 
-        expect(Item.find_by_max_price(120001)).to eq(item_2)
+        expect(Item.find_by_max_price(120001)).to eq(item_3)
       end
     end
 
@@ -126,7 +126,7 @@ describe Item, type: :model do
           unit_price: 120000
         )
 
-        expect(Item.find_by_min_and_max_price(100001, 150000)).to eq(item_3)
+        expect(Item.find_by_min_and_max_price(100001, 150000)).to eq(item_2)
       end
     end
   end
