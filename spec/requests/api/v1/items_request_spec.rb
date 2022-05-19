@@ -491,4 +491,36 @@ describe "Items API" do
 
     expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
+
+  it "users should get an error if name and either/both of the price parameters are sent" do
+    merchant_1 = create(:merchant)
+
+    merchant_1.items.create!(
+      name: "Gibson Les Paul",
+      description: "Sunburst Finish",
+      unit_price: 200000
+    )
+    merchant_1.items.create!(
+      name: "Fender Telecaster",
+      description: "Butterscotch Blonde Finish",
+      unit_price: 130000
+    )
+    merchant_1.items.create!(
+      name: "Fender Stratocaster",
+      description: "Seafoam Green Finish",
+      unit_price: 100000
+    )
+    merchant_1.items.create!(
+      name: "Ibanez Prestige",
+      description: "Black Finish",
+      unit_price: 120000
+    )
+
+    search_params = {name: "fender", max_price: 150000}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/items/find", headers: headers, params: search_params
+
+    expect(response).to have_http_status(500)
+  end
 end
