@@ -98,7 +98,7 @@ describe "Merchants API" do
     end
   end
 
-  it "returns a 404 if the merchant is not found for an merchants/:id/items request" do
+  it "returns a 404 if the merchant is not found for a merchants/:id/items request" do
     get "/api/v1/merchants/1/items"
 
     expect(response).to have_http_status(404)
