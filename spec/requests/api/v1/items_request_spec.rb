@@ -267,6 +267,21 @@ describe "Items API" do
     expect(merchant[:attributes][:name]).not_to eq(merchant_1.name)
   end
 
+  it "returns a 404 if the item is not found for an items/:id/merchant request" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    item_1 = create(:item, merchant_id: merchant_2.id)
+    item_2 = create(:item, merchant_id: merchant_1.id)
+    item_3 = create(:item, merchant_id: merchant_1.id)
+    id = item_3.id
+    item_3.destroy
+
+    get "/api/v1/items/#{id}/merchant"
+
+    expect(response).to have_http_status(404)
+  end
+
   it "can send data for one item based on search criteria, which is case-insensitive and returns the first item alphabetically by name" do
     merchant_1 = create(:merchant)
 
