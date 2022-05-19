@@ -1,6 +1,11 @@
 class Api::V1::Items::FindController < ApplicationController
   def index
-    if (params[:name] && params[:min_price]) || (params[:name] && params[:max_price])
+    if (params[:name] && params[:min_price]) ||
+        (params[:name] && params[:max_price]) ||
+        params[:name] == "" ||
+        params[:min_price] == "" ||
+        params[:max_price] == "" ||
+        ((params[:max_price] && params[:min_price]) && (params[:min_price].to_i > params[:max_price].to_i))
       render status: 400
     elsif params[:name]
       item = Item.find_by_name(params[:name])
