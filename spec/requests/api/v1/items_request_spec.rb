@@ -282,7 +282,7 @@ describe "Items API" do
     expect(response).to have_http_status(404)
   end
 
-  it "can send data for one item based on search criteria, which is case-insensitive and returns the first item alphabetically by name" do
+  it "can send data for one item based on name search criteria, which is case-insensitive and returns the first item alphabetically by name" do
     merchant_1 = create(:merchant)
 
     merchant_1.items.create!(
@@ -332,6 +332,162 @@ describe "Items API" do
     expect(item[:attributes][:unit_price]).not_to eq(200000)
     expect(item[:attributes][:unit_price]).not_to eq(120000)
     expect(item[:attributes][:unit_price]).not_to eq(130000)
+
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
+  end
+
+  it "can send one item based on minimum price search criteria, which returns the first item alphabetically by name" do
+    merchant_1 = create(:merchant)
+
+    merchant_1.items.create!(
+      name: "Gibson Les Paul",
+      description: "Sunburst Finish",
+      unit_price: 200000
+    )
+    merchant_1.items.create!(
+      name: "Fender Telecaster",
+      description: "Butterscotch Blonde Finish",
+      unit_price: 130000
+    )
+    merchant_1.items.create!(
+      name: "Fender Stratocaster",
+      description: "Seafoam Green Finish",
+      unit_price: 100000
+    )
+    merchant_1.items.create!(
+      name: "Ibanez Prestige",
+      description: "Black Finish",
+      unit_price: 140000
+    )
+
+    search_params = {min_price: 1300001}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/items/find", headers: headers, params: search_params
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+    expect(item).to be_a Hash
+
+    expect(item[:attributes][:name]).not_to eq("Fender Stratocaster")
+    expect(item[:attributes][:name]).to eq("Gibson Les Paul")
+    expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
+    expect(item[:attributes][:name]).not_to eq("Fender Telecaster")
+
+    expect(item[:attributes][:description]).not_to eq("Seafoam Green Finish")
+    expect(item[:attributes][:description]).to eq("Sunburst Finish")
+    expect(item[:attributes][:description]).not_to eq("Black Finish")
+    expect(item[:attributes][:description]).not_to eq("Butterscotch Blonde Finish")
+
+    expect(item[:attributes][:unit_price]).not_to eq(100000)
+    expect(item[:attributes][:unit_price]).to eq(200000)
+    expect(item[:attributes][:unit_price]).not_to eq(120000)
+    expect(item[:attributes][:unit_price]).not_to eq(130000)
+
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
+  end
+
+  it "can send one item based on maximum price search criteria, which returns the first item alphabetically by name" do
+    merchant_1 = create(:merchant)
+
+    merchant_1.items.create!(
+      name: "Gibson Les Paul",
+      description: "Sunburst Finish",
+      unit_price: 200000
+    )
+    merchant_1.items.create!(
+      name: "Fender Telecaster",
+      description: "Butterscotch Blonde Finish",
+      unit_price: 130000
+    )
+    merchant_1.items.create!(
+      name: "Fender Stratocaster",
+      description: "Seafoam Green Finish",
+      unit_price: 100000
+    )
+    merchant_1.items.create!(
+      name: "Ibanez Prestige",
+      description: "Black Finish",
+      unit_price: 120000
+    )
+
+    search_params = {max_price: 120001}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/items/find", headers: headers, params: search_params
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+    expect(item).to be_a Hash
+
+    expect(item[:attributes][:name]).to eq("Fender Stratocaster")
+    expect(item[:attributes][:name]).not_to eq("Gibson Les Paul")
+    expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
+    expect(item[:attributes][:name]).not_to eq("Fender Telecaster")
+
+    expect(item[:attributes][:description]).to eq("Seafoam Green Finish")
+    expect(item[:attributes][:description]).not_to eq("Sunburst Finish")
+    expect(item[:attributes][:description]).not_to eq("Black Finish")
+    expect(item[:attributes][:description]).not_to eq("Butterscotch Blonde Finish")
+
+    expect(item[:attributes][:unit_price]).to eq(100000)
+    expect(item[:attributes][:unit_price]).not_to eq(200000)
+    expect(item[:attributes][:unit_price]).not_to eq(120000)
+    expect(item[:attributes][:unit_price]).not_to eq(130000)
+
+    expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
+  end
+
+  it "can send one item based on minimum and maximum price search criteria, which returns the first item alphabetically by name" do
+    merchant_1 = create(:merchant)
+
+    merchant_1.items.create!(
+      name: "Gibson Les Paul",
+      description: "Sunburst Finish",
+      unit_price: 200000
+    )
+    merchant_1.items.create!(
+      name: "Fender Telecaster",
+      description: "Butterscotch Blonde Finish",
+      unit_price: 130000
+    )
+    merchant_1.items.create!(
+      name: "Fender Stratocaster",
+      description: "Seafoam Green Finish",
+      unit_price: 100000
+    )
+    merchant_1.items.create!(
+      name: "Ibanez Prestige",
+      description: "Black Finish",
+      unit_price: 120000
+    )
+
+    search_params = {min_price: 100001, max_price: 150000}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/items/find", headers: headers, params: search_params
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    item = response_body[:data]
+
+    expect(item).to be_a Hash
+
+    expect(item[:attributes][:name]).not_to eq("Fender Stratocaster")
+    expect(item[:attributes][:name]).not_to eq("Gibson Les Paul")
+    expect(item[:attributes][:name]).not_to eq("Ibanez Prestige")
+    expect(item[:attributes][:name]).to eq("Fender Telecaster")
+
+    expect(item[:attributes][:description]).not_to eq("Seafoam Green Finish")
+    expect(item[:attributes][:description]).not_to eq("Sunburst Finish")
+    expect(item[:attributes][:description]).not_to eq("Black Finish")
+    expect(item[:attributes][:description]).to eq("Butterscotch Blonde Finish")
+
+    expect(item[:attributes][:unit_price]).not_to eq(100000)
+    expect(item[:attributes][:unit_price]).not_to eq(200000)
+    expect(item[:attributes][:unit_price]).not_to eq(120000)
+    expect(item[:attributes][:unit_price]).to eq(130000)
 
     expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
