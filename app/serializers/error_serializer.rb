@@ -1,4 +1,4 @@
-module ErrorSerializer
+class ErrorSerializer
   def self.serialize(errors)
     json = {}
     errors_hash = errors.to_hash(true).map do |key, value|

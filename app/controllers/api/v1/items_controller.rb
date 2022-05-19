@@ -1,6 +1,4 @@
 class Api::V1::ItemsController < ApplicationController
-  include ErrorSerializer
-
   def index
     render json: ItemSerializer.new(Item.all)
   end
