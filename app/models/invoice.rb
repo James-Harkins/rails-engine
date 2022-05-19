@@ -4,7 +4,7 @@ class Invoice < ApplicationRecord
 
   def self.only_containing_item(item_id)
     all.find_all do |invoice|
-      invoice.invoice_items.length == 1
+      invoice.invoice_items.length == 1 && invoice.invoice_items_only_contain_item(item_id)
     end
   end
 
