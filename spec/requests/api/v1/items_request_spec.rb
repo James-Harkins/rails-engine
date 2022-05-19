@@ -360,7 +360,7 @@ describe "Items API" do
       unit_price: 140000
     )
 
-    search_params = {min_price: 1300001}
+    search_params = {min_price: 130001}
     headers = {"CONTENT_TYPE" => "application/json"}
 
     get "/api/v1/items/find", headers: headers, params: search_params
