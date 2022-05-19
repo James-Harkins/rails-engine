@@ -98,6 +98,12 @@ describe "Merchants API" do
     end
   end
 
+  it "returns a 404 if the merchant is not found for an merchants/:id/items request" do
+    get "/api/v1/merchants/1/items"
+
+    expect(response).to have_http_status(404)
+  end
+
   it "can find all merchants matching some case-insensitive search criteria and returns them in alphabetical order by name" do
     Merchant.create(name: "Leo Fender")
     Merchant.create(name: "Doug West")
