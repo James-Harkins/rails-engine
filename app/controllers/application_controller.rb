@@ -8,14 +8,4 @@ class ApplicationController < ActionController::API
   def render_404
     render file: "#{Rails.root}/public/404", status: :not_found
   end
-
-  def invalid_params
-    raise ActionController::RoutingError.new("Invalid Params")
-  rescue
-    render_404
-  end
-
-  def render_500
-    render file: "#{Rails.root}/public/404", status: :invalid_params
-  end
 end

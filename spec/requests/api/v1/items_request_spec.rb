@@ -521,6 +521,6 @@ describe "Items API" do
 
     get "/api/v1/items/find", headers: headers, params: search_params
 
-    expect(response).to have_http_status(500)
+    expect(response).to have_http_status(400)
   end
 end
