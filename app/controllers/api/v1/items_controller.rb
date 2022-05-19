@@ -24,6 +24,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
+    item = Item.find(params[:id])
+    Invoice.only_containing_item(item.id).each do |invoice|
+      invoice.invoice_items.each { |invoice_item| invoice_item.destroy }
+      invoice.destroy
+    end
+    item.invoice_items.each { |invoice_item| invoice_item.destroy }
     Item.destroy(params[:id])
     render body: nil, status: :no_content
   end

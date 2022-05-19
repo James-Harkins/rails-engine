@@ -241,11 +241,11 @@ describe "Items API" do
     delete "/api/v1/items/#{item_4.id}"
 
     expect(Invoice.find(invoice_1.id)).to eq(invoice_1)
-    expect(Invoice.find(invoice_2.id)).to eq(nil)
-    expect(Invoice.find(invoice_3.id)).to eq(invoice_1)
-    expect(Invoice.find(invoice_4.id)).to eq(invoice_1)
-    expect(Invoice.find(invoice_5.id)).to eq(nil)
-    expect(Invoice.find(invoice_6.id)).to eq(invoice_1)
+    expect { Invoice.find(invoice_2.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    expect(Invoice.find(invoice_3.id)).to eq(invoice_3)
+    expect(Invoice.find(invoice_4.id)).to eq(invoice_4)
+    expect { Invoice.find(invoice_5.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    expect(Invoice.find(invoice_6.id)).to eq(invoice_6)
   end
 
   it "can send merchant data for a given Item id" do
