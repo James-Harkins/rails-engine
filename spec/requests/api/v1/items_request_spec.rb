@@ -192,6 +192,62 @@ describe "Items API" do
     expect(response).to have_http_status(204)
   end
 
+  it "when an item is deleted, all invoices where the deleted item was the only item are destroyed" do
+    merchant_1 = create(:merchant)
+
+    item_1 = merchant_1.items.create!(
+      name: "Gibson Les Paul",
+      description: "Sunburst Finish",
+      unit_price: 200000
+    )
+    item_2 = merchant_1.items.create!(
+      name: "Fender Telecaster",
+      description: "Butterscotch Blonde Finish",
+      unit_price: 130000
+    )
+    item_3 = merchant_1.items.create!(
+      name: "Fender Stratocaster",
+      description: "Seafoam Green Finish",
+      unit_price: 100000
+    )
+    item_4 = merchant_1.items.create!(
+      name: "Ibanez Prestige",
+      description: "Black Finish",
+      unit_price: 120000
+    )
+
+    invoice_1 = Invoice.create!
+    invoice_2 = Invoice.create!
+    invoice_3 = Invoice.create!
+    invoice_4 = Invoice.create!
+    invoice_5 = Invoice.create!
+    invoice_6 = Invoice.create!
+
+    InvoiceItem.create!(invoice: invoice_1, item: item_1)
+    InvoiceItem.create!(invoice: invoice_1, item: item_3)
+
+    InvoiceItem.create!(invoice: invoice_2, item: item_4)
+
+    InvoiceItem.create!(invoice: invoice_3, item: item_2)
+    InvoiceItem.create!(invoice: invoice_3, item: item_1)
+
+    InvoiceItem.create!(invoice: invoice_4, item: item_1)
+
+    InvoiceItem.create!(invoice: invoice_5, item: item_4)
+
+    InvoiceItem.create!(invoice: invoice_6, item: item_1)
+    InvoiceItem.create!(invoice: invoice_6, item: item_4)
+
+    delete "/api/v1/items/#{item_4.id}"
+
+    expect(Invoice.find(invoice_1.id)).to eq(invoice_1)
+    expect(Invoice.find(invoice_2.id)).to eq(nil)
+    expect(Invoice.find(invoice_3.id)).to eq(invoice_1)
+    expect(Invoice.find(invoice_4.id)).to eq(invoice_1)
+    expect(Invoice.find(invoice_5.id)).to eq(nil)
+    expect(Invoice.find(invoice_6.id)).to eq(invoice_1)
+  end
+
   it "can send merchant data for a given Item id" do
     merchant_1 = create(:merchant)
     merchant_2 = create(:merchant)
