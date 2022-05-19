@@ -8,8 +8,12 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    item = Item.create(item_params)
-    render json: ItemSerializer.new(item)
+    item = Item.new(item_params)
+    if item.save
+      render json: ItemSerializer.new(item)
+    else
+      render json: ErrorSerializer.serialize(item.errors)
+    end
   end
 
   def update
@@ -18,7 +22,14 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def destroy
-    render json: Item.delete(params[:id])
+    item = Item.find(params[:id])
+    Invoice.only_containing_item(item.id).each do |invoice|
+      invoice.invoice_items.each { |invoice_item| invoice_item.destroy }
+      invoice.destroy
+    end
+    item.invoice_items.each { |invoice_item| invoice_item.destroy }
+    Item.destroy(params[:id])
+    render body: nil, status: :no_content
   end
 
   private

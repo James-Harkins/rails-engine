@@ -16,9 +16,37 @@ describe "Merchants API" do
     merchants.each do |merchant|
       expect(merchant).to have_key(:id)
 
+      expect(merchant[:type]).to eq("merchant")
+
       expect(merchant[:attributes]).to have_key(:name)
       expect(merchant[:attributes][:name]).to be_an(String)
     end
+  end
+
+  it "always returns an array of data, even if one resource is found" do
+    create(:merchant)
+
+    get "/api/v1/merchants"
+
+    expect(response).to be_successful
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchants = response_body[:data]
+
+    expect(merchants).to be_an Array
+    expect(merchants.count).to eq(1)
+  end
+
+  it "always returns an array of data, even if one resource is found" do
+    get "/api/v1/merchants"
+
+    expect(response).to be_successful
+
+    response_body = JSON.parse(response.body, symbolize_names: true)
+    merchants = response_body[:data]
+
+    expect(merchants).to be_an Array
+    expect(merchants.count).to eq(0)
   end
 
   it "can send one merchant by its id" do
@@ -30,6 +58,8 @@ describe "Merchants API" do
 
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchant = response_body[:data]
+
+    expect(merchant).to be_a Hash
 
     expect(merchant).to have_key(:id)
 
@@ -49,6 +79,8 @@ describe "Merchants API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     items = response_body[:data]
 
+    expect(items).to be_an Array
+
     items.each do |item|
       expect(item).to have_key(:id)
 
@@ -60,17 +92,26 @@ describe "Merchants API" do
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_an(Float)
+
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).to eq(merchant.id)
     end
   end
 
-  it "can find all merchants matching some search criteria" do
-    merchant_1 = Merchant.create(name: "Leo Fender")
-    merchant_2 = Merchant.create(name: "Doug West")
-    merchant_3 = Merchant.create(name: "Brian Fender")
-    merchant_4 = Merchant.create(name: "Orville Gibson")
-    merchant_5 = Merchant.create(name: "Bill Fender")
+  it "returns a 404 if the merchant is not found for a merchants/:id/items request" do
+    get "/api/v1/merchants/1/items"
 
-    search_params = {name: "Fender"}
+    expect(response).to have_http_status(404)
+  end
+
+  it "can find all merchants matching some case-insensitive search criteria and returns them in alphabetical order by name" do
+    Merchant.create(name: "Leo Fender")
+    Merchant.create(name: "Doug West")
+    Merchant.create(name: "Brian Fender")
+    Merchant.create(name: "Orville Gibson")
+    Merchant.create(name: "Bill Fender")
+
+    search_params = {name: "fender"}
     headers = {"CONTENT_TYPE" => "application/json"}
 
     get "/api/v1/merchants/find_all", headers: headers, params: search_params
@@ -78,6 +119,7 @@ describe "Merchants API" do
     response_body = JSON.parse(response.body, symbolize_names: true)
     merchants = response_body[:data]
 
+    expect(merchants).to be_an Array
     expect(merchants.count).to eq(3)
 
     merchants.each do |merchant|
