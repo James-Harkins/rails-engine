@@ -7,4 +7,8 @@ class Invoice < ApplicationRecord
       invoice.invoice_items.length == 1
     end
   end
+
+  def invoice_items_only_contain_item(item_id)
+    invoice_items.all? { |invoice_item| invoice_item.item_id == item_id }
+  end
 end
