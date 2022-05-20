@@ -1,21 +1,12 @@
 class ApplicationController < ActionController::API
-  def record_not_found
-    raise ActionController::RoutingError.new("Not Found")
-  rescue
-    render_404
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :render_invalid_record
+
+  def render_not_found(exception)
+    render json: {error: exception.message}, status: :not_found
   end
 
-  def render_404
-    render file: "#{Rails.root}/public/404", status: :not_found
-  end
-
-  def invalid_params
-    raise ActionController::RoutingError.new("Invalid Params")
-  rescue
-    render_404
-  end
-
-  def render_500
-    render file: "#{Rails.root}/public/404", status: :invalid_params
+  def render_invalid_record(exception)
+    render json: {error: exception.message}, status: :not_found
   end
 end

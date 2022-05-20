@@ -127,4 +127,19 @@ describe "Merchants API" do
       expect(expected_names).to be true
     end
   end
+
+  it "if the user's name search is an empty string, a 400 error is returned" do
+    Merchant.create(name: "Leo Fender")
+    Merchant.create(name: "Doug West")
+    Merchant.create(name: "Brian Fender")
+    Merchant.create(name: "Orville Gibson")
+    Merchant.create(name: "Bill Fender")
+
+    search_params = {name: ""}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    get "/api/v1/merchants/find_all", headers: headers, params: search_params
+
+    expect(response).to have_http_status(400)
+  end
 end

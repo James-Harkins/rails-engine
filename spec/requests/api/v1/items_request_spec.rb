@@ -181,6 +181,18 @@ describe "Items API" do
     expect(item[:attributes][:merchant_id]).to eq(merchant_1.id)
   end
 
+  it "returns a 404 error if the user attempts to update an item with a bad merchant_id" do
+    merchant_1 = create(:merchant)
+    id = create(:item, merchant_id: merchant_1.id).id
+    previous_name = Item.last.name
+    item_params = {name: "Homer Simpson", merchant_id: 99999999}
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to have_http_status(404)
+  end
+
   it "can delete a given item" do
     merchant_1 = create(:merchant)
     id = create(:item, merchant_id: merchant_1.id).id
@@ -521,6 +533,6 @@ describe "Items API" do
 
     get "/api/v1/items/find", headers: headers, params: search_params
 
-    expect(response).to have_http_status(500)
+    expect(response).to have_http_status(400)
   end
 end

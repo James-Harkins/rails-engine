@@ -8,10 +8,6 @@ class Api::V1::MerchantItemsController < ApplicationController
   private
 
   def find_merchant
-    @merchant = begin
-      Merchant.find(params[:merchant_id])
-    rescue
-      record_not_found
-    end
+    @merchant = Merchant.find(params[:merchant_id])
   end
 end
