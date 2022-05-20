@@ -13,18 +13,6 @@ class Item < ApplicationRecord
       .first
   end
 
-  def self.find_by_min_price(min_price)
-    where("items.unit_price > ?", min_price)
-      .order(:name)
-      .first
-  end
-
-  def self.find_by_max_price(max_price)
-    where("items.unit_price < ?", max_price)
-      .order(:name)
-      .first
-  end
-
   def self.find_by_min_and_max_price(min_price, max_price)
     min_price ||= 0
     max_price ||= Float::INFINITY

@@ -43,64 +43,6 @@ describe Item, type: :model do
       end
     end
 
-    describe "#find_by_min_price" do
-      it "returns the first item alphabetically that is below the min_price passed in as an argument" do
-        merchant_1 = create(:merchant)
-
-        item_1 = merchant_1.items.create!(
-          name: "Gibson Les Paul",
-          description: "Sunburst Finish",
-          unit_price: 200000
-        )
-        item_2 = merchant_1.items.create!(
-          name: "Fender Telecaster",
-          description: "Butterscotch Blonde Finish",
-          unit_price: 130000
-        )
-        item_3 = merchant_1.items.create!(
-          name: "Fender Stratocaster",
-          description: "Seafoam Green Finish",
-          unit_price: 100000
-        )
-        item_4 = merchant_1.items.create!(
-          name: "Ibanez Prestige",
-          description: "Black Finish",
-          unit_price: 140000
-        )
-
-        expect(Item.find_by_min_price(130001)).to eq(item_1)
-      end
-    end
-
-    describe "#find_by_max_price" do
-      it "returns the first item alphabetically that is below the max_price passed in as an argument" do
-        merchant_1 = create(:merchant)
-
-        item_1 = merchant_1.items.create!(
-          name: "Gibson Les Paul",
-          description: "Sunburst Finish",
-          unit_price: 200000
-        )
-        item_2 = merchant_1.items.create!(
-          name: "Fender Telecaster",
-          description: "Butterscotch Blonde Finish",
-          unit_price: 130000
-        )
-        item_3 = merchant_1.items.create!(
-          name: "Fender Stratocaster",
-          description: "Seafoam Green Finish",
-          unit_price: 100000
-        )
-        item_4 = merchant_1.items.create!(
-          name: "Ibanez Prestige",
-          description: "Black Finish",
-          unit_price: 120000
-        )
-
-        expect(Item.find_by_max_price(120001)).to eq(item_3)
-      end
-    end
-
     describe "#find_by_min_and_max_price" do
       it "returns the first item alphabetically by name that is within the range of min and max prices passed in as arguments" do
         merchant_1 = create(:merchant)
